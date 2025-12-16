@@ -148,9 +148,9 @@ npm run test:e2e
 
 ## Project Phases
 
-- [x] **Phase 1**: Foundation - Project setup, basic UI ✅
-- [x] **Phase 2**: Context Detection - NLP engine, ML model ✅
-- [x] **Phase 3**: Fitts' Law Optimization - Personalized layouts ✅
+- [ ] **Phase 1**: Foundation - Project setup, basic UI 
+- [ ] **Phase 2**: Context Detection - NLP engine, ML model(Groq) 
+- [ ] **Phase 3**: Fitts' Law Optimization - Personalized layouts 
 - [ ] **Phase 4**: Metrics & Analytics - Data collection, dashboard
 - [ ] **Phase 5**: User Study System - Study platform, questionnaires
 - [ ] **Phase 6**: Testing & Refinement
@@ -161,10 +161,6 @@ npm run test:e2e
 
 Intelligent keyboard optimization with Fitts' Law! Keys resize and reposition based on your typing patterns for 10-15% speed improvement. See [PHASE3_FITTS_LAW_GUIDE.md](PHASE3_FITTS_LAW_GUIDE.md) for details.
 
-**Previous Phases:**
-- Phase 2: ML-powered context detection (95-98% accuracy) - [PHASE2_ML_GUIDE.md](PHASE2_ML_GUIDE.md)
-- Phase 1: Foundation and basic UI - [GETTING_STARTED.md](GETTING_STARTED.md)
-
 ## Key Features
 
 - ✅ Automatic context detection (Code, Email, Chat)
@@ -174,14 +170,8 @@ Intelligent keyboard optimization with Fitts' Law! Keys resize and reposition ba
 - ✅ Built-in user study framework
 - ✅ Comprehensive analytics dashboard
 
-## Contributing
 
-Please refer to `ContextType_Project_Documentation.md` for detailed specifications and implementation guidelines.
-
-## License
-
-[Specify License]
 
 ## Contact
 
-[Your contact information]
+mihir.yanamandra@stonybrook.edu
