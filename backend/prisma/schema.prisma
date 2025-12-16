@@ -1,0 +1,153 @@
+// This is your Prisma schema file
+// Learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                    String                     @id @default(uuid()) @map("user_id")
+  createdAt             DateTime                   @default(now()) @map("created_at") @db.Timestamptz(6)
+  studyGroup            String?                    @map("study_group")
+  ageRange              String?                    @map("age_range")
+  typingExperience      String?                    @map("typing_experience")
+  programmingExperience String?                    @map("programming_experience")
+  consentGiven          Boolean                    @default(false) @map("consent_given")
+  demographics          Json?
+
+  sessions              Session[]
+  taskCompletions       TaskCompletion[]
+  questionnaireResponses QuestionnaireResponse[]
+
+  @@map("users")
+}
+
+model Session {
+  id               String              @id @default(uuid()) @map("session_id")
+  userId           String              @map("user_id")
+  startTime        DateTime            @default(now()) @map("start_time") @db.Timestamptz(6)
+  endTime          DateTime?           @map("end_time") @db.Timestamptz(6)
+  keyboardType     String?             @map("keyboard_type")
+  tasksCompleted   String[]            @map("tasks_completed")
+
+  user             User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  keystrokes       Keystroke[]
+  contextDetections ContextDetection[]
+  performanceMetrics PerformanceMetric[]
+  taskCompletions  TaskCompletion[]
+  questionnaireResponses QuestionnaireResponse[]
+
+  @@map("sessions")
+}
+
+model Task {
+  id                String              @id @default(uuid()) @map("task_id")
+  taskType          String              @map("task_type")
+  description       String
+  targetText        String?             @map("target_text")
+  expectedDuration  Int?                @map("expected_duration")
+  difficultyLevel   Int?                @map("difficulty_level")
+  createdAt         DateTime            @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  completions       TaskCompletion[]
+  performanceMetrics PerformanceMetric[]
+
+  @@map("tasks")
+}
+
+model Keystroke {
+  id            String    @id @default(uuid()) @map("keystroke_id")
+  sessionId     String    @map("session_id")
+  timestamp     DateTime  @default(now()) @db.Timestamptz(6)
+  key           String
+  contextMode   String?   @map("context_mode")
+  isError       Boolean   @default(false) @map("is_error")
+  correction    Boolean   @default(false)
+  keyDuration   Float?    @map("key_duration")
+
+  session       Session   @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId, timestamp(sort: Desc)])
+  @@index([timestamp(sort: Desc)])
+  @@map("keystrokes")
+}
+
+model ContextDetection {
+  id                String    @id @default(uuid()) @map("detection_id")
+  sessionId         String    @map("session_id")
+  timestamp         DateTime  @default(now()) @db.Timestamptz(6)
+  textSample        String?   @map("text_sample")
+  detectedContext   String    @map("detected_context")
+  confidenceScore   Float     @map("confidence_score")
+  previousContext   String?   @map("previous_context")
+  features          Json?
+
+  session           Session   @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId, timestamp(sort: Desc)])
+  @@map("context_detections")
+}
+
+model PerformanceMetric {
+  id          String    @id @default(uuid()) @map("metric_id")
+  sessionId   String    @map("session_id")
+  taskId      String?   @map("task_id")
+  timestamp   DateTime  @default(now()) @db.Timestamptz(6)
+  wpm         Float?
+  errorRate   Float?    @map("error_rate")
+  contextMode String?   @map("context_mode")
+
+  session     Session   @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  task        Task?     @relation(fields: [taskId], references: [id], onDelete: SetNull)
+
+  @@index([sessionId, timestamp(sort: Desc)])
+  @@map("performance_metrics")
+}
+
+model TaskCompletion {
+  id                  String    @id @default(uuid()) @map("completion_id")
+  taskId              String    @map("task_id")
+  userId              String    @map("user_id")
+  sessionId           String    @map("session_id")
+  startedAt           DateTime  @default(now()) @map("started_at") @db.Timestamptz(6)
+  completedAt         DateTime? @map("completed_at") @db.Timestamptz(6)
+  completionTime      Int?      @map("completion_time")
+  satisfactionRating  Int?      @map("satisfaction_rating")
+  comments            String?
+
+  task                Task      @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  user                User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  session             Session   @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@map("task_completions")
+}
+
+model QuestionnaireResponse {
+  id                  String    @id @default(uuid()) @map("response_id")
+  userId              String    @map("user_id")
+  sessionId           String    @map("session_id")
+  questionnaireType   String    @map("questionnaire_type")
+  responses           Json
+  createdAt           DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  user                User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  session             Session   @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@map("questionnaire_responses")
+}
+
+model KeyboardLayout {
+  id           String    @id @default(uuid()) @map("layout_id")
+  mode         String
+  version      String
+  layoutConfig Json      @map("layout_config")
+  isActive     Boolean   @default(true) @map("is_active")
+  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  @@map("keyboard_layouts")
+}

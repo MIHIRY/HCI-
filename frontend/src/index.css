@@ -1,0 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* Prevent horizontal overflow globally */
+  html, body {
+    @apply m-0 min-h-screen bg-gray-50 text-gray-900;
+    overflow-x: hidden;
+    max-width: 100vw;
+  }
+
+  /* Ensure all containers respect viewport width */
+  * {
+    box-sizing: border-box;
+  }
+
+  /* Prevent any element from exceeding viewport width */
+  body > * {
+    max-width: 100vw;
+  }
+}
+
+@layer components {
+  /* Keyboard key styles */
+  .keyboard-key {
+    @apply rounded-lg border border-gray-300 bg-white shadow-sm hover:bg-gray-50 active:bg-gray-200
+           transition-all duration-150 cursor-pointer select-none flex items-center justify-center
+           font-semibold;
+  }
+
+  .keyboard-key-code {
+    @apply bg-blue-50 border-blue-300 text-blue-900 hover:bg-blue-100;
+  }
+
+  .keyboard-key-email {
+    @apply bg-gray-50 border-gray-300 text-gray-900 hover:bg-gray-100;
+  }
+
+  .keyboard-key-chat {
+    @apply bg-purple-50 border-purple-300 text-purple-900 hover:bg-purple-100;
+  }
+
+  /* Context badge styles */
+  .context-badge {
+    @apply px-3 py-1 rounded-full text-sm font-medium;
+  }
+
+  .context-badge-code {
+    @apply bg-blue-100 text-blue-800 border border-blue-300;
+  }
+
+  .context-badge-email {
+    @apply bg-gray-100 text-gray-800 border border-gray-300;
+  }
+
+  .context-badge-chat {
+    @apply bg-purple-100 text-purple-800 border border-purple-300;
+  }
+}
